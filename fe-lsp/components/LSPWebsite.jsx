@@ -41,7 +41,7 @@ const LSPWebsite = () => {
   const fetchSchemes = async (pageNumber) => {
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:5000/api/skema?page=${pageNumber}&limit=8`);
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/skema?page=${pageNumber}&limit=8`);
       const responseData = await response.json();
 
       const newSchemes = responseData.data;

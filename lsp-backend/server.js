@@ -25,8 +25,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Konfigurasi koneksi MongoDB
-// Ganti 'mongodb://localhost:27017/lsp-bpvp-aceh' dengan connection string MongoDB Anda jika berbeda.
-const MONGO_URI = 'mongodb://localhost:27017/lsp-bpvp-aceh';
+// Mengambil dari environment variable atau menggunakan default local
+const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/lsp-bpvp-aceh';
 
 // Middleware
 app.use(cors()); // Mengizinkan Cross-Origin Resource Sharing
