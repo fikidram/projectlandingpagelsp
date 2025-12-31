@@ -123,7 +123,7 @@ const LSPWebsite = () => {
 
   const stats = [
     { number: "500+", label: "Peserta Tersertifikasi", icon: <Users className="w-6 h-6" /> },
-    { number: "50+", label: "Skema Sertifikasi", icon: <Award className="w-6 h-6" /> },
+    { number: "102+", label: "Skema Sertifikasi", icon: <Award className="w-6 h-6" /> },
     { number: "15+", label: "Tahun Pengalaman", icon: <Calendar className="w-6 h-6" /> },
     { number: "98%", label: "Tingkat Kepuasan", icon: <Star className="w-6 h-6" /> }
   ];
@@ -205,14 +205,14 @@ const LSPWebsite = () => {
       <section id="home" className="pt-20 pb-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-cyan-600/10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-8">
+          <div className="grid xl:grid-cols-2 gap-12 xl:gap-20 items-center">
+            <div className="space-y-8 relative z-10">
               <div className="inline-flex items-center px-4 py-2 bg-blue-50 rounded-full text-blue-700 text-sm font-medium">
                 <Shield className="w-4 h-4 mr-2" />
                 Lembaga Sertifikasi Profesi Terakreditasi
               </div>
 
-              <h1 className="text-5xl lg:text-6xl font-bold text-gray-900 leading-tight">
+              <h1 className="text-4xl md:text-5xl xl:text-6xl font-bold text-gray-900 leading-tight">
                 Wujudkan
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-cyan-600"> Kompetensi</span>
                 Profesional Anda
