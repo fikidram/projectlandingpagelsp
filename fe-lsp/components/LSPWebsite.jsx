@@ -33,32 +33,70 @@ const LSPWebsite = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const certificationSchemes = [
-    {
-      title: "Teknologi Informasi",
-      description: "Sertifikasi untuk profesional IT dan software development",
-      icon: <Globe className="w-8 h-8" />,
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      title: "Manajemen Proyek",
-      description: "Sertifikasi untuk project manager dan team leader",
-      icon: <Target className="w-8 h-8" />,
-      color: "from-purple-500 to-pink-500"
-    },
-    {
-      title: "Administrasi Bisnis",
-      description: "Sertifikasi untuk administrator dan staff profesional",
-      icon: <Building className="w-8 h-8" />,
-      color: "from-green-500 to-emerald-500"
-    },
-    {
-      title: "Keuangan & Akuntansi",
-      description: "Sertifikasi untuk profesi keuangan dan akuntansi",
-      icon: <TrendingUp className="w-8 h-8" />,
-      color: "from-orange-500 to-red-500"
+  const [certificationSchemes, setCertificationSchemes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
+  const fetchSchemes = async (pageNumber) => {
+    try {
+      setLoading(true);
+      const response = await fetch(`http://localhost:5000/api/skema?page=${pageNumber}&limit=8`);
+      const responseData = await response.json();
+
+      const newSchemes = responseData.data;
+
+      // Check if we have more data
+      if (pageNumber >= responseData.totalPages) {
+        setHasMore(false);
+      }
+
+      // Map data and assign colors based on jenis
+      const processedData = newSchemes.map(item => {
+        let color = "from-gray-500 to-slate-500";
+        let icon = <Award className="w-8 h-8" />;
+
+        if (item.jenis === 'Okupasi') {
+          color = "from-blue-500 to-cyan-500";
+          icon = <Users className="w-8 h-8" />;
+        } else if (item.jenis === 'Klaster') {
+          color = "from-green-500 to-emerald-500";
+          icon = <Target className="w-8 h-8" />;
+        } else if (item.jenis === 'Kualifikasi') {
+          color = "from-purple-500 to-pink-500";
+          icon = <Award className="w-8 h-8" />;
+        }
+
+        return {
+          ...item,
+          title: item.judul,
+          description: item.deskripsi || "Sertifikasi kompetensi profesi",
+          color,
+          icon
+        };
+      });
+
+      if (pageNumber === 1) {
+        setCertificationSchemes(processedData);
+      } else {
+        setCertificationSchemes(prev => [...prev, ...processedData]);
+      }
+    } catch (error) {
+      console.error("Error fetching schemes:", error);
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  useEffect(() => {
+    fetchSchemes(1);
+  }, []);
+
+  const handleLoadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchSchemes(nextPage);
+  };
 
   const features = [
     {
@@ -260,25 +298,48 @@ const LSPWebsite = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {certificationSchemes.map((scheme, index) => (
-              <div key={index} className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
-                <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${scheme.color} flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}>
-                  {scheme.icon}
+          {loading && !certificationSchemes.length ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-blue-600"></div>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {certificationSchemes.map((scheme, index) => (
+                <div key={index} className="group bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+                  <div className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${scheme.color} flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform`}>
+                    {scheme.icon}
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-3">
+                    {scheme.title}
+                  </h3>
+                  <p className="text-gray-600 mb-6">
+                    {scheme.description}
+                  </p>
+                  <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors flex items-center">
+                    Lihat Detail
+                    <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  </button>
                 </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {scheme.title}
-                </h3>
-                <p className="text-gray-600 mb-6">
-                  {scheme.description}
-                </p>
-                <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors flex items-center">
-                  Lihat Detail
-                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-                </button>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
+
+          {loading && (
+            <div className="flex justify-center items-center mt-8">
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+            </div>
+          )}
+
+          {!loading && hasMore && (
+            <div className="flex justify-center mt-12">
+              <button
+                onClick={handleLoadMore}
+                className="bg-white border-2 border-blue-600 text-blue-600 px-8 py-3 rounded-full font-semibold hover:bg-blue-50 transition-all duration-300 transform hover:scale-105"
+              >
+                Muat Lebih Banyak
+              </button>
+            </div>
+          )}
         </div>
       </section>
 

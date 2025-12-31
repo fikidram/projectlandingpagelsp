@@ -11,8 +11,9 @@ const mongooseSkema = require('mongoose');
 
 const skemaSchema = new mongooseSkema.Schema({
     judul: { type: String, required: true },
-    deskripsi: { type: String, required: true },
-    gambar: { type: String, required: true },
+    jenis: { type: String, required: true },
+    deskripsi: { type: String, required: false, default: "Belum ada deskripsi" },
+    gambar: { type: String, required: false, default: "https://placehold.co/400x250/3b82f6/ffffff?text=Skema+LSP" },
 });
 
 module.exports = mongooseSkema.model('Skema', skemaSchema);
