@@ -21,7 +21,10 @@ import {
 } from 'lucide-react';
 import logo from '../src/assets/logo.png';
 
+import { useNavigate } from 'react-router-dom';
+
 const LSPWebsite = () => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -70,7 +73,7 @@ const LSPWebsite = () => {
         return {
           ...item,
           title: item.judul,
-          description: item.deskripsi || "Sertifikasi kompetensi profesi",
+          description: item.ringkasan || (item.deskripsi && item.deskripsi.length > 100 ? item.deskripsi.substring(0, 100) + "..." : item.deskripsi) || "Sertifikasi kompetensi profesi",
           color,
           icon
         };
@@ -315,7 +318,10 @@ const LSPWebsite = () => {
                   <p className="text-gray-600 mb-6">
                     {scheme.description}
                   </p>
-                  <button className="text-blue-600 font-semibold hover:text-blue-700 transition-colors flex items-center">
+                  <button
+                    onClick={() => navigate(`/skema/${scheme._id}`)}
+                    className="text-blue-600 font-semibold hover:text-blue-700 transition-colors flex items-center"
+                  >
                     Lihat Detail
                     <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                   </button>

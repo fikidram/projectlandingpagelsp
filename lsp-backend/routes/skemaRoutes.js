@@ -34,4 +34,24 @@ routerSkema.get('/', async (req, res) => {
     }
 });
 
+// GET: Mengambil satu skema berdasarkan ID beserta unit kompetensinya
+routerSkema.get('/:id', async (req, res) => {
+    try {
+        const skema = await Skema.findById(req.params.id);
+        if (!skema) {
+            return res.status(404).json({ message: 'Skema tidak ditemukan' });
+        }
+
+        const UnitKompetensi = require('../models/UnitKompetensi');
+        const units = await UnitKompetensi.find({ skema: skema._id });
+
+        res.json({
+            data: skema,
+            units: units
+        });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = routerSkema;
