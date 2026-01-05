@@ -12,6 +12,8 @@ Deskripsi:
 */
 
 const express = require('express');
+require('dotenv').config(); // Load environment variables
+
 const mongoose = require('mongoose');
 const cors = require('cors');
 
